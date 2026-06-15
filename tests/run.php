@@ -28,6 +28,34 @@ function write_json($path, array $payload)
     file_put_contents($path, json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n");
 }
 
+function remove_tree($path)
+{
+    if (!is_dir($path)) {
+        return;
+    }
+    $items = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+    foreach ($items as $item) {
+        if ($item->isDir()) {
+            rmdir($item->getPathname());
+        } else {
+            unlink($item->getPathname());
+        }
+    }
+    rmdir($path);
+}
+
+function run_installer($mode, $configPath, $reportPath)
+{
+    $php = PHP_BINARY;
+    $installer = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'installer' . DIRECTORY_SEPARATOR . 'install-run.php';
+    $command = escapeshellarg($php) . ' ' . escapeshellarg($installer) . ' --mode ' . escapeshellarg($mode) . ' --config ' . escapeshellarg($configPath) . ' --report ' . escapeshellarg($reportPath);
+    exec($command, $output, $code);
+    return array($code, implode("\n", $output));
+}
+
 function test_config($root, $token)
 {
     return array(
@@ -211,6 +239,64 @@ assert_true($response->status === 200, 'registry can disable relay gateway');
 
 $response = $app->handle(request('POST', 'cebu-cebu-relay.pbb.ph', '/relay/api/v1/receive', array('X-PBB-Peer-Domain' => 'hub.pbb.ph')));
 assert_true($response->status === 404, 'gateway rejects route when relay public gateway is disabled');
+
+$installerRoot = temp_root();
+$installPath = $installerRoot . DIRECTORY_SEPARATOR . 'installed-landing';
+$installerConfigPath = $installerRoot . DIRECTORY_SEPARATOR . 'landing.config.json';
+$installerReportPath = $installerRoot . DIRECTORY_SEPARATOR . 'landing.report.json';
+$tokenHash = hash('sha256', 'installer-token');
+$installerConfig = array(
+    'schema_version' => 1,
+    'mode' => 'fresh',
+    'kit' => array('run_id' => 'test-installer'),
+    'app' => array(
+        'install_path' => $installPath,
+        'public_path' => $installPath . DIRECTORY_SEPARATOR . 'public',
+        'app_url' => 'https://pbb.ph',
+        'app_env' => 'production',
+    ),
+    'landing' => array(
+        'local_host' => 'pbb.ph',
+        'hq_host' => 'hub.pbb.ph',
+        'registry_token_hash' => $tokenHash,
+        'paths' => array(
+            'relay_hub_json' => 'C:/wamp64/www/pbb/relay/public/hub.json',
+        ),
+        'gateway' => array(
+            'max_body_bytes' => 2048,
+            'require_peer_domain' => true,
+            'timeout_seconds' => 12,
+        ),
+    ),
+);
+write_json($installerConfigPath, $installerConfig);
+
+list($code) = run_installer('preflight', $installerConfigPath, $installerReportPath);
+$preflightReport = json_decode((string) file_get_contents($installerReportPath), true);
+assert_true($code === 0 && isset($preflightReport['status']) && $preflightReport['status'] === 'success', 'installer preflight succeeds');
+assert_true(!is_dir($installPath), 'installer preflight does not create install path');
+
+list($code) = run_installer('fresh', $installerConfigPath, $installerReportPath);
+$installReport = json_decode((string) file_get_contents($installerReportPath), true);
+assert_true($code === 0 && isset($installReport['status']) && $installReport['status'] === 'success', 'installer fresh install succeeds');
+assert_true(is_file($installPath . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'index.php'), 'installer copies Landing public entrypoint');
+assert_true(is_file($installPath . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'landing.local.php'), 'installer writes local config');
+assert_true(is_file($installPath . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'installer' . DIRECTORY_SEPARATOR . 'install-manifest.json'), 'installer writes install manifest');
+$localConfigText = (string) file_get_contents($installPath . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'landing.local.php');
+assert_true(strpos($localConfigText, $tokenHash) !== false && strpos($localConfigText, 'installer-token') === false, 'installer writes token hash without plaintext token');
+
+$installedRegistryPath = $installPath . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'registry.json';
+write_json($installedRegistryPath, array(
+    'schema_version' => 1,
+    'generated_at' => 'preserved',
+    'generated_by' => 'test',
+    'apps' => array('pbb-preserved' => array('id' => 'pbb-preserved', 'name' => 'Preserved', 'enabled' => true)),
+));
+list($code) = run_installer('repair', $installerConfigPath, $installerReportPath);
+$repairedRegistry = json_decode((string) file_get_contents($installedRegistryPath), true);
+assert_true($code === 0 && isset($repairedRegistry['apps']['pbb-preserved']), 'installer repair preserves existing registry');
+
+remove_tree($installerRoot);
 
 if ($failures) {
     echo "\n" . count($failures) . " failure(s).\n";

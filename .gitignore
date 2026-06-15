@@ -1,4 +1,7 @@
 storage/logs/*.log
 !storage/logs/.gitkeep
+storage/installer/
+config/landing.local.php
+dist/
 *.tmp
 *.bak

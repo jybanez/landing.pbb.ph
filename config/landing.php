@@ -2,7 +2,7 @@
 
 $root = dirname(__DIR__);
 
-return array(
+$config = array(
     'app' => array(
         'id' => 'pbb-landing',
         'name' => 'PBB Landing',
@@ -32,3 +32,26 @@ return array(
         'timeout_seconds' => 30,
     ),
 );
+
+$localConfig = __DIR__ . DIRECTORY_SEPARATOR . 'landing.local.php';
+if (is_file($localConfig)) {
+    $overrides = require $localConfig;
+    if (is_array($overrides)) {
+        $config = pbb_landing_config_merge($config, $overrides);
+    }
+}
+
+return $config;
+
+function pbb_landing_config_merge(array $base, array $overrides)
+{
+    foreach ($overrides as $key => $value) {
+        if (isset($base[$key]) && is_array($base[$key]) && is_array($value)) {
+            $base[$key] = pbb_landing_config_merge($base[$key], $value);
+        } else {
+            $base[$key] = $value;
+        }
+    }
+
+    return $base;
+}

@@ -159,3 +159,15 @@ Before handing a Landing bundle to Kit:
 - update Kit `packages\packages.bundled.json`
 - publish the same ZIP as a GitHub Release asset for updater flows
 - announce the app id, version, build id, commit, archive hash, and compatibility in the chat log
+
+## Current Landing Tooling
+
+Implemented in this repo:
+
+- `installer/install-run.php` supports `preflight`, `fresh`, `repair`, and `upgrade`.
+- `installer/schema/install.schema.json` documents the Kit-provided config payload.
+- `installer/status.php` reports installed release and manifest state.
+- `tools/build-bundle.php` stages a Kit-shaped ZIP, writes `checksums.sha256`, injects build metadata, and refuses canonical builds from a dirty worktree unless `--allow-dirty` is passed for a test build.
+- Installer smoke tests cover preflight, fresh install, token hash handling, and repair registry preservation.
+
+The canonical release ZIP should be produced after the implementation commit is clean, then handed to Kit and attached to the matching GitHub release.

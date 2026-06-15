@@ -106,6 +106,13 @@ Status legend:
 ## Phase 7: Kit Setup Integration
 
 - [x] Define Landing release/install contract.
+- [x] Add Landing unattended installer runner for `preflight`, `fresh`, `repair`, and `upgrade`.
+- [x] Add Landing installer config schema for Kit-provided install values.
+- [x] Add Landing installer status endpoint.
+- [x] Add safe local config generation that stores token hash only.
+- [x] Add repair/upgrade preservation for `storage/registry.json`.
+- [x] Add canonical bundle builder with checksums and dirty-tree guard.
+- [x] Add installer smoke tests for preflight, fresh install, token handling, and repair preservation.
 - [ ] Add or update Kit package metadata for `pbb-landing`.
 - [ ] Add Landing local vhost generation for `pbb.ph`.
 - [ ] Add Landing public vhost generation for Relay `hub.json.domain`.

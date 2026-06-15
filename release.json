@@ -3,7 +3,16 @@
   "app": "pbb-landing",
   "name": "PBB Landing",
   "version": "0.1.0",
-  "display_version": "v0.1.0",
+  "display_version": "v0-0.1.0",
+  "milestone": 0,
+  "build": {
+    "version": "0.1.0",
+    "id": "pbb-landing-0.1.0-installer-dev",
+    "built_at": "2026-06-15T20:50:00+08:00",
+    "git_commit": "pending-canonical-bundle",
+    "builder": "pbb-landing-installer-build"
+  },
+  "release_date": "2026-06-15",
   "release_name": "Landing Surface And Gateway Baseline",
   "type": "php-lightweight",
   "requires": {
@@ -11,13 +20,47 @@
     "php": ">=8.2",
     "php_extensions": ["json", "openssl", "curl"]
   },
+  "repository": {
+    "type": "github",
+    "owner": "jybanez",
+    "repo": "landing.pbb.ph",
+    "url": "https://github.com/jybanez/landing.pbb.ph"
+  },
+  "updates": {
+    "source": "github-releases",
+    "channel": "testing"
+  },
+  "update": {
+    "contract_version": 1,
+    "channel": "testing",
+    "immutable_release": false,
+    "from_versions": ["0.1.0"],
+    "compatibility": "same-version-rebuild",
+    "requires_database_migration": false,
+    "requires_data_prep_rerun": false,
+    "requires_service_restart": false,
+    "rollback_supported": true
+  },
+  "installer": {
+    "interactive": "installer/index.php",
+    "unattended": "installer/install-run.php",
+    "status": "installer/status.php",
+    "schema": "installer/schema/install.schema.json",
+    "web_server": {
+      "owner": "kit",
+      "notes": "Kit Setup owns local pbb.ph and public hub-domain vhost generation, TLS, registry token configuration, and registry sync calls."
+    }
+  },
   "health": {
     "status": "/.well-known/pbb-hub.json"
   },
-  "installer": {
-    "web_server": {
-      "owner": "kit",
-      "notes": "Kit Setup owns local pbb.ph and public hub-domain vhost generation, TLS, registry token configuration, and registry POST calls."
+  "landing": {
+    "launcher": {
+      "visible": false
+    },
+    "public_gateway": {
+      "enabled": false
     }
-  }
+  },
+  "runtime_services": []
 }
