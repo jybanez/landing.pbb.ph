@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "app": "pbb-landing",
+  "name": "PBB Landing",
+  "version": "0.1.0",
+  "display_version": "v0.1.0",
+  "release_name": "Landing Surface And Gateway Baseline",
+  "type": "php-lightweight",
+  "requires": {
+    "os": ["windows", "linux"],
+    "php": ">=8.2",
+    "php_extensions": ["json", "openssl", "curl"]
+  },
+  "health": {
+    "status": "/.well-known/pbb-hub.json"
+  },
+  "installer": {
+    "web_server": {
+      "owner": "kit",
+      "notes": "Kit Setup owns local pbb.ph and public hub-domain vhost generation, TLS, registry token configuration, and registry POST calls."
+    }
+  }
+}

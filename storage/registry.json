@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-15T10:52:01+08:00",
+  "generated_by": "pbb-landing",
+  "apps": {
+    "pbb-relay": {
+      "id": "pbb-relay",
+      "name": "PBB Relay",
+      "version": "1.1.0",
+      "enabled": true,
+      "install_scope": "local",
+      "install_path": "C:/wamp64/www/pbb/relay",
+      "public_path": "C:/wamp64/www/pbb/relay/public",
+      "local_url": "https://relay.pbb.ph",
+      "launch_url": "https://relay.pbb.ph",
+      "health_url": "https://relay.pbb.ph/api/status",
+      "audience": [
+        "admin",
+        "support"
+      ],
+      "launcher": {
+        "visible": true,
+        "sort": 20,
+        "icon": "pbb-relay",
+        "logo_url": "https://relay.pbb.ph/assets/launcher/app-icon.png",
+        "logo_alt": "PBB Relay",
+        "logo_kind": "mark"
+      },
+      "public_gateway": {
+        "enabled": true,
+        "path_prefix": "/relay",
+        "target_base_url": "https://relay.pbb.ph",
+        "allowed_path_prefixes": [
+          "/api/v1/"
+        ],
+        "m2m_only": true
+      },
+      "source": {
+        "release_json": "C:/wamp64/www/pbb/relay/release.json"
+      }
+    },
+    "pbb-hotline": {
+      "id": "pbb-hotline",
+      "name": "PBB Hotline",
+      "version": "5.6.1",
+      "enabled": true,
+      "install_scope": "local",
+      "install_path": "C:/wamp64/www/pbb/hotline",
+      "public_path": "C:/wamp64/www/pbb/hotline/public",
+      "local_url": "https://hotline.pbb.ph",
+      "launch_url": "https://hotline.pbb.ph",
+      "health_url": "https://hotline.pbb.ph/up",
+      "audience": [
+        "citizen",
+        "operator",
+        "command",
+        "admin"
+      ],
+      "launcher": {
+        "visible": true,
+        "sort": 10,
+        "icon": "hotline",
+        "logo_url": "https://hotline.pbb.ph/assets/launcher/app-icon.png",
+        "logo_alt": "PBB Hotline",
+        "logo_kind": "mark"
+      },
+      "surfaces": {
+        "public": "https://hotline.pbb.ph",
+        "citizen": "https://hotline.pbb.ph/citizen",
+        "operator": "https://hotline.pbb.ph/operator",
+        "command": "https://hotline.pbb.ph/command",
+        "admin": "https://hotline.pbb.ph/admin"
+      },
+      "public_gateway": {
+        "enabled": false,
+        "reason": "Phase 1 public gateway scope is Relay only."
+      },
+      "source": {
+        "release_json": "C:/wamp64/www/pbb/hotline/release.json"
+      }
+    },
+    "pbb-support": {
+      "id": "pbb-support",
+      "name": "PBB Support System",
+      "version": "0.1.0",
+      "enabled": true,
+      "install_scope": "local",
+      "install_path": "C:/wamp64/www/pbb/support",
+      "public_path": "C:/wamp64/www/pbb/support/public",
+      "local_url": "https://support.pbb.ph",
+      "launch_url": "https://support.pbb.ph",
+      "health_url": "https://support.pbb.ph/up",
+      "audience": [
+        "support",
+        "admin"
+      ],
+      "launcher": {
+        "visible": true,
+        "sort": 30,
+        "icon": "pbb-support",
+        "logo_url": "https://support.pbb.ph/assets/launcher/app-icon.png",
+        "logo_alt": "PBB Support System",
+        "logo_kind": "mark"
+      },
+      "public_gateway": {
+        "enabled": false,
+        "reason": "Phase 1 public gateway scope is Relay only."
+      },
+      "source": {
+        "release_json": "C:/wamp64/www/pbb/support/release.json"
+      }
+    }
+  }
+}
