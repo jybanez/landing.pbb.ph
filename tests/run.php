@@ -141,7 +141,7 @@ $relayRecord = array(
     'health_url' => 'https://relay.pbb.ph/api/status',
     'audience' => array('admin', 'support'),
     'launcher' => array(
-        'visible' => true,
+        'visible' => false,
         'sort' => 20,
         'icon' => 'comms.radio',
         'logo_url' => 'https://relay.pbb.ph/assets/pbb-relay-mark.svg',
@@ -175,10 +175,29 @@ $response = $app->handle(request('GET', 'pbb.ph', '/internal/registry/apps', arr
 $payload = json_decode($response->body, true);
 assert_true(isset($payload['apps']['pbb-relay']['install_path']), 'registry GET returns full private registry behind token');
 
+$hotlineRecord = $relayRecord;
+$hotlineRecord['id'] = 'pbb-hotline';
+$hotlineRecord['name'] = 'PBB Hotline';
+$hotlineRecord['display_name'] = 'Hotline';
+$hotlineRecord['local_url'] = 'https://hotline.pbb.ph';
+$hotlineRecord['launch_url'] = 'https://hotline.pbb.ph';
+$hotlineRecord['health_url'] = 'https://hotline.pbb.ph/up';
+$hotlineRecord['launcher']['visible'] = true;
+$hotlineRecord['launcher']['sort'] = 10;
+$hotlineRecord['launcher']['icon'] = 'hotline';
+$hotlineRecord['launcher']['logo_url'] = 'https://hotline.pbb.ph/assets/launcher/app-icon.png';
+$hotlineRecord['public_gateway']['enabled'] = false;
+$response = $app->handle(request('PUT', 'pbb.ph', '/internal/registry/apps/pbb-hotline', array(
+    'Authorization' => 'Bearer ' . $token,
+    'Content-Type' => 'application/json',
+), json_encode($hotlineRecord)));
+assert_true($response->status === 200, 'registry accepts visible launcher app');
+
 $response = $app->handle(request('GET', 'pbb.ph', '/'));
-assert_true(strpos($response->body, 'class="app-logo app-logo-mark"') !== false && strpos($response->body, 'https://relay.pbb.ph/assets/pbb-relay-mark.svg') !== false, 'launcher renders app-owned logo when provided');
-assert_true(strpos($response->body, '<span class="app-tile-name">Relay</span>') !== false && strpos($response->body, '<span class="app-tile-name">PBB Relay</span>') === false, 'launcher prefers display_name over formal app name');
-assert_true(strpos($response->body, 'alt="Relay"') !== false, 'launcher defaults app logo alt text from display_name');
+assert_true(strpos($response->body, 'class="app-logo app-logo-mark"') !== false && strpos($response->body, 'https://hotline.pbb.ph/assets/launcher/app-icon.png') !== false, 'launcher renders app-owned logo when provided');
+assert_true(strpos($response->body, '<span class="app-tile-name">Hotline</span>') !== false && strpos($response->body, '<span class="app-tile-name">PBB Hotline</span>') === false, 'launcher prefers display_name over formal app name');
+assert_true(strpos($response->body, 'alt="Hotline"') !== false, 'launcher defaults app logo alt text from display_name');
+assert_true(strpos($response->body, '<span class="app-tile-name">Relay</span>') === false, 'launcher hides apps with launcher.visible=false');
 assert_true(strpos($response->body, 'ui-navbar-brand-media') === false && strpos($response->body, '<span class="ui-navbar-brand-label">CEBU CITY, CEBU</span>') !== false && strpos($response->body, '<span class="ui-navbar-brand-subtitle">PBB Landing v0.1.0</span>') !== false, 'launcher navbar uses hub name and Landing version without brand icon');
 
 $response = $app->handle(request('GET', 'pbb.ph', '/relay/api/v1/receive'));

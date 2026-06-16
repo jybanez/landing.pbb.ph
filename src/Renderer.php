@@ -45,6 +45,9 @@ class PbbLanding_Renderer
             if (!is_array($app) || empty($app['enabled'])) {
                 continue;
             }
+            if (!$this->isLauncherVisible($app)) {
+                continue;
+            }
             $name = $this->appDisplayName($app);
             $launch = isset($app['launch_url']) ? $app['launch_url'] : (isset($app['local_url']) ? $app['local_url'] : '#');
             $health = isset($app['health_url']) ? $app['health_url'] : '';
@@ -87,6 +90,12 @@ class PbbLanding_Renderer
             return strcmp($this->appDisplayName($a), $this->appDisplayName($b));
         }
         return $as < $bs ? -1 : 1;
+    }
+
+    private function isLauncherVisible(array $app)
+    {
+        $launcher = isset($app['launcher']) && is_array($app['launcher']) ? $app['launcher'] : array();
+        return !isset($launcher['visible']) || $launcher['visible'] !== false;
     }
 
     private function styles()

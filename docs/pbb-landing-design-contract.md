@@ -397,12 +397,16 @@ Asset reachability:
 - Landing validates `launcher.logo_url` is absolute HTTPS.
 - Landing does not fetch or block registry writes on asset reachability in Phase 1.
 - Kit should verify asset reachability after app vhost/certificate setup and treat failure as a registry sync warning unless the install policy later promotes it to a blocker.
+- Local launcher rendering must skip apps with `launcher.visible=false`. Hidden launcher apps may remain enabled in the registry for public gateway routing and internal health metadata.
 
 ## Public App Gateway Contract
 
 Landing gateway routing is registry-driven. Landing owns the common host gates, peer checks, header filtering, size limits, TLS forwarding, and logging. App-specific public prefixes and app-specific machine API namespaces come from `registry.json` so new PBB apps do not require Landing code changes.
 
 Phase 1 enables Relay only, using this registry entry:
+
+Relay is a machine/API gateway app, not a citizen launcher app. Its registry
+record should keep `launcher.visible=false` while `public_gateway.enabled=true`.
 
 Public route:
 

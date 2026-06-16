@@ -20,7 +20,7 @@
         "support"
       ],
       "launcher": {
-        "visible": true,
+        "visible": false,
         "sort": 20,
         "icon": "pbb-relay",
         "logo_url": "https://relay.pbb.ph/assets/launcher/app-icon.png",
