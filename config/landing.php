@@ -6,6 +6,7 @@ $config = array(
     'app' => array(
         'id' => 'pbb-landing',
         'name' => 'PBB Landing',
+        'display_name' => 'Landing',
         'version' => '0.1.0',
         'release_name' => 'Landing Surface And Gateway Baseline',
     ),

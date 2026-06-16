@@ -165,6 +165,7 @@ Draft shape:
     "pbb-relay": {
       "id": "pbb-relay",
       "name": "PBB Relay",
+      "display_name": "Relay",
       "version": "1.1.0",
       "enabled": true,
       "install_scope": "local",
@@ -179,7 +180,6 @@ Draft shape:
         "sort": 20,
         "icon": "comms.radio",
         "logo_url": "https://relay.pbb.ph/assets/pbb-relay-mark.svg",
-        "logo_alt": "PBB Relay",
         "logo_kind": "mark"
       },
       "public_gateway": {
@@ -304,6 +304,7 @@ Successful `PUT` response:
   "app": {
     "id": "pbb-hotline",
     "name": "PBB Hotline",
+    "display_name": "Hotline",
     "version": "5.6.1",
     "enabled": true,
     "install_scope": "local",
@@ -318,7 +319,6 @@ Successful `PUT` response:
       "sort": 10,
       "icon": "hotline",
       "logo_url": "https://hotline.pbb.ph/assets/launcher/app-icon.png",
-      "logo_alt": "PBB Hotline",
       "logo_kind": "mark"
     },
     "surfaces": {
@@ -351,12 +351,14 @@ Validation error response:
 Required app fields for Kit:
 
 - `id`: canonical app id, equal to route `{app_id}`.
-- `name`: display name.
+- `name`: formal/internal product name, such as `PBB Hotline`.
+- `display_name`: short production-facing launcher label, such as `Hotline`. Landing uses this as the launcher tile label and default launcher image alt text when present.
 - `enabled`: boolean.
 
 Strongly recommended app fields:
 
 - `version`.
+- `display_name`: short launcher label. If omitted, Landing falls back to `name`.
 - `install_scope`: `local`, `remote`, or `disabled`; defaults to `local`.
 - `install_path`.
 - `public_path`.
@@ -367,7 +369,7 @@ Strongly recommended app fields:
 - `launcher.visible`: boolean.
 - `launcher.sort`: integer ordering.
 - `launcher.logo_url`: absolute HTTPS app-owned mark/logo URL.
-- `launcher.logo_alt`: accessible text for the app image.
+- `launcher.logo_alt`: optional accessible text for the app image only when it intentionally differs from `display_name`.
 - `launcher.logo_kind`: `mark` or `logo`.
 - `launcher.icon`: fallback Helper icon key only.
 - `surfaces`: optional object of named HTTPS URLs for secondary app surfaces.
@@ -479,7 +481,8 @@ During install or repair, Kit Setup must provide:
   - discover app-provided launcher asset metadata from release or installer metadata when available,
   - ensure bundled app assets land under the app public path, recommended `public/assets/launcher/app-icon.png`,
   - verify the resulting HTTPS URL is reachable after vhost/certificate setup,
-  - write `launcher.logo_url`, `launcher.logo_alt`, and `launcher.logo_kind` to Landing registry,
+  - write `display_name`, `launcher.logo_url`, and `launcher.logo_kind` to Landing registry,
+  - omit `launcher.logo_alt` unless the accessible image text intentionally differs from `display_name`,
   - keep `launcher.icon` as a fallback when no app-owned logo is available.
 - Relay public gateway record for Phase 1.
 - Health/smoke checks for local launcher, public metadata, internal route gating, and Relay gateway refusal/forwarding behavior.

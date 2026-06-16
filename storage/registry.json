@@ -6,6 +6,7 @@
     "pbb-relay": {
       "id": "pbb-relay",
       "name": "PBB Relay",
+      "display_name": "Relay",
       "version": "1.1.0",
       "enabled": true,
       "install_scope": "local",
@@ -23,7 +24,6 @@
         "sort": 20,
         "icon": "pbb-relay",
         "logo_url": "https://relay.pbb.ph/assets/launcher/app-icon.png",
-        "logo_alt": "PBB Relay",
         "logo_kind": "mark"
       },
       "public_gateway": {
@@ -42,6 +42,7 @@
     "pbb-hotline": {
       "id": "pbb-hotline",
       "name": "PBB Hotline",
+      "display_name": "Hotline",
       "version": "5.6.1",
       "enabled": true,
       "install_scope": "local",
@@ -61,7 +62,6 @@
         "sort": 10,
         "icon": "hotline",
         "logo_url": "https://hotline.pbb.ph/assets/launcher/app-icon.png",
-        "logo_alt": "PBB Hotline",
         "logo_kind": "mark"
       },
       "surfaces": {
@@ -82,6 +82,7 @@
     "pbb-support": {
       "id": "pbb-support",
       "name": "PBB Support System",
+      "display_name": "Support",
       "version": "0.1.0",
       "enabled": true,
       "install_scope": "local",
@@ -99,7 +100,6 @@
         "sort": 30,
         "icon": "pbb-support",
         "logo_url": "https://support.pbb.ph/assets/launcher/app-icon.png",
-        "logo_alt": "PBB Support System",
         "logo_kind": "mark"
       },
       "public_gateway": {

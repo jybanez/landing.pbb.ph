@@ -2,6 +2,7 @@
   "schema_version": 1,
   "app": "pbb-landing",
   "name": "PBB Landing",
+  "display_name": "Landing",
   "version": "0.1.0",
   "display_version": "v0-0.1.0",
   "milestone": 0,

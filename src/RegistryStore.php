@@ -80,6 +80,9 @@ class PbbLanding_RegistryStore
         if (!isset($record['name']) || trim((string) $record['name']) === '') {
             $errors[] = 'name is required';
         }
+        if (isset($record['display_name']) && trim((string) $record['display_name']) === '') {
+            $errors[] = 'display_name must not be empty when provided';
+        }
         if (!isset($record['enabled']) || !is_bool($record['enabled'])) {
             $errors[] = 'enabled must be boolean';
         }

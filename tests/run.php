@@ -59,7 +59,7 @@ function run_installer($mode, $configPath, $reportPath)
 function test_config($root, $token)
 {
     return array(
-        'app' => array('id' => 'pbb-landing', 'name' => 'PBB Landing', 'version' => '0.1.0'),
+        'app' => array('id' => 'pbb-landing', 'name' => 'PBB Landing', 'display_name' => 'Landing', 'version' => '0.1.0'),
         'hosts' => array('local' => 'pbb.ph', 'hq' => 'hub.pbb.ph'),
         'paths' => array(
             'registry' => $root . DIRECTORY_SEPARATOR . 'registry.json',
@@ -130,6 +130,7 @@ assert_true($response->status === 401, 'internal registry requires token on loca
 $relayRecord = array(
     'id' => 'pbb-relay',
     'name' => 'PBB Relay',
+    'display_name' => 'Relay',
     'version' => '1.1.0',
     'enabled' => true,
     'install_scope' => 'local',
@@ -144,7 +145,6 @@ $relayRecord = array(
         'sort' => 20,
         'icon' => 'comms.radio',
         'logo_url' => 'https://relay.pbb.ph/assets/pbb-relay-mark.svg',
-        'logo_alt' => 'PBB Relay',
         'logo_kind' => 'mark',
     ),
     'public_gateway' => array(
@@ -177,6 +177,8 @@ assert_true(isset($payload['apps']['pbb-relay']['install_path']), 'registry GET 
 
 $response = $app->handle(request('GET', 'pbb.ph', '/'));
 assert_true(strpos($response->body, 'class="app-logo app-logo-mark"') !== false && strpos($response->body, 'https://relay.pbb.ph/assets/pbb-relay-mark.svg') !== false, 'launcher renders app-owned logo when provided');
+assert_true(strpos($response->body, '<span class="app-tile-name">Relay</span>') !== false && strpos($response->body, '<span class="app-tile-name">PBB Relay</span>') === false, 'launcher prefers display_name over formal app name');
+assert_true(strpos($response->body, 'alt="Relay"') !== false, 'launcher defaults app logo alt text from display_name');
 assert_true(strpos($response->body, 'ui-navbar-brand-media') === false && strpos($response->body, '<span class="ui-navbar-brand-label">CEBU CITY, CEBU</span>') !== false && strpos($response->body, '<span class="ui-navbar-brand-subtitle">PBB Landing v0.1.0</span>') !== false, 'launcher navbar uses hub name and Landing version without brand icon');
 
 $response = $app->handle(request('GET', 'pbb.ph', '/relay/api/v1/receive'));
@@ -208,6 +210,7 @@ assert_true($response->status === 413, 'gateway rejects oversized body before fo
 $supportGatewayRecord = $relayRecord;
 $supportGatewayRecord['id'] = 'pbb-support';
 $supportGatewayRecord['name'] = 'PBB Support';
+$supportGatewayRecord['display_name'] = 'Support';
 $supportGatewayRecord['local_url'] = 'https://support.pbb.ph';
 $supportGatewayRecord['launch_url'] = 'https://support.pbb.ph';
 $supportGatewayRecord['health_url'] = 'https://support.pbb.ph/up';

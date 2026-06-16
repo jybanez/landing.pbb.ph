@@ -45,7 +45,7 @@ class PbbLanding_Renderer
             if (!is_array($app) || empty($app['enabled'])) {
                 continue;
             }
-            $name = isset($app['name']) ? $app['name'] : $app['id'];
+            $name = $this->appDisplayName($app);
             $launch = isset($app['launch_url']) ? $app['launch_url'] : (isset($app['local_url']) ? $app['local_url'] : '#');
             $health = isset($app['health_url']) ? $app['health_url'] : '';
             $audience = isset($app['audience']) && is_array($app['audience']) ? implode(', ', $app['audience']) : '';
@@ -84,7 +84,7 @@ class PbbLanding_Renderer
         $as = isset($a['launcher']['sort']) ? (int) $a['launcher']['sort'] : 100;
         $bs = isset($b['launcher']['sort']) ? (int) $b['launcher']['sort'] : 100;
         if ($as === $bs) {
-            return strcmp(isset($a['name']) ? $a['name'] : '', isset($b['name']) ? $b['name'] : '');
+            return strcmp($this->appDisplayName($a), $this->appDisplayName($b));
         }
         return $as < $bs ? -1 : 1;
     }
@@ -102,11 +102,11 @@ class PbbLanding_Renderer
     private function appIdentity(array $app)
     {
         $launcher = isset($app['launcher']) && is_array($app['launcher']) ? $app['launcher'] : array();
-        $name = isset($app['name']) ? $app['name'] : (isset($app['id']) ? $app['id'] : 'PBB App');
+        $name = $this->appDisplayName($app);
         $logoUrl = isset($launcher['logo_url']) ? (string) $launcher['logo_url'] : '';
         if ($logoUrl !== '' && preg_match('/^https:\/\/[^\/\s]+\/.+/i', $logoUrl)) {
             $kind = isset($launcher['logo_kind']) && in_array($launcher['logo_kind'], array('mark', 'logo'), true) ? $launcher['logo_kind'] : 'mark';
-            $alt = isset($launcher['logo_alt']) ? (string) $launcher['logo_alt'] : $name . ' logo';
+            $alt = isset($launcher['logo_alt']) ? (string) $launcher['logo_alt'] : $name;
             return '<span class="app-logo app-logo-' . $this->e($kind) . '"><img src="' . $this->e($logoUrl) . '" alt="' . $this->e($alt) . '" loading="lazy" decoding="async"></span>';
         }
 
@@ -137,6 +137,17 @@ class PbbLanding_Renderer
         }
 
         return $item;
+    }
+
+    private function appDisplayName(array $app)
+    {
+        if (isset($app['display_name']) && trim((string) $app['display_name']) !== '') {
+            return (string) $app['display_name'];
+        }
+        if (isset($app['name']) && trim((string) $app['name']) !== '') {
+            return (string) $app['name'];
+        }
+        return isset($app['id']) ? (string) $app['id'] : 'PBB App';
     }
 
     private function helperIcon($name)
