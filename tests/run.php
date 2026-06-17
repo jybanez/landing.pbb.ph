@@ -118,6 +118,9 @@ assert_true(isset($payload['hub']['id']) && $payload['hub']['id'] === '072217', 
 assert_true(!isset($payload['uplinks']) && !isset($payload['sources']), 'public projection does not expose top-level peer lists');
 assert_true(strpos($response->body, 'snapshot_hash') === false && strpos($response->body, 'base_url') === false, 'public projection excludes denied Relay fields');
 
+$response = $app->handle(request('HEAD', 'cebu-cebu-relay.pbb.ph', '/'));
+assert_true($response->status === 200 && $response->body === '' && isset($response->headers['Content-Type']) && strpos($response->headers['Content-Type'], 'text/html') === 0, 'public hub root supports HEAD with empty body');
+
 $response = $app->handle(request('GET', 'pbb.ph', '/.well-known/pbb-hub.json'));
 assert_true($response->status === 404, 'public projection fails on pbb.ph');
 
@@ -199,6 +202,9 @@ assert_true(strpos($response->body, '<span class="app-tile-name">Hotline</span>'
 assert_true(strpos($response->body, 'alt="Hotline"') !== false, 'launcher defaults app logo alt text from display_name');
 assert_true(strpos($response->body, '<span class="app-tile-name">Relay</span>') === false, 'launcher hides apps with launcher.visible=false');
 assert_true(strpos($response->body, 'ui-navbar-brand-media') === false && strpos($response->body, '<span class="ui-navbar-brand-label">CEBU CITY, CEBU</span>') !== false && strpos($response->body, '<span class="ui-navbar-brand-subtitle">PBB Landing v0.1.0</span>') !== false, 'launcher navbar uses hub name and Landing version without brand icon');
+
+$response = $app->handle(request('HEAD', 'pbb.ph', '/'));
+assert_true($response->status === 200 && $response->body === '' && isset($response->headers['Content-Type']) && strpos($response->headers['Content-Type'], 'text/html') === 0, 'local launcher root supports HEAD with empty body');
 
 $response = $app->handle(request('GET', 'pbb.ph', '/relay/api/v1/receive'));
 assert_true($response->status === 404, 'gateway fails on pbb.ph');

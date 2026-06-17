@@ -54,9 +54,9 @@ class PbbLanding_App
             if ($this->gateway->matches($request->path, $registry) !== null) {
                 return PbbLanding_Response::json(404, array('error' => 'gateway_not_available_on_local_host'));
             }
-            if ($request->path === '/' && $request->method === 'GET') {
+            if ($this->isRootRead($request)) {
                 $projection = $this->projection->publicProjection($hub, $registry, $hubState);
-                return PbbLanding_Response::html(200, $this->renderer->launcher($projection, $registry));
+                return $this->headAware($request, PbbLanding_Response::html(200, $this->renderer->launcher($projection, $registry)));
             }
             return PbbLanding_Response::json(404, array('error' => 'not_found'));
         }
@@ -72,8 +72,8 @@ class PbbLanding_App
                 }
                 return $this->gateway->forward($request, $registry);
             }
-            if ($request->path === '/' && $request->method === 'GET') {
-                return PbbLanding_Response::html(200, $this->renderer->publicHub($this->projection->publicProjection($hub, $registry, $hubState)));
+            if ($this->isRootRead($request)) {
+                return $this->headAware($request, PbbLanding_Response::html(200, $this->renderer->publicHub($this->projection->publicProjection($hub, $registry, $hubState))));
             }
             return PbbLanding_Response::json(404, array('error' => 'not_found'));
         }
@@ -131,6 +131,20 @@ class PbbLanding_App
         }
 
         return array_values(array_unique($hosts));
+    }
+
+    private function isRootRead(PbbLanding_Request $request)
+    {
+        return $request->path === '/' && ($request->method === 'GET' || $request->method === 'HEAD');
+    }
+
+    private function headAware(PbbLanding_Request $request, PbbLanding_Response $response)
+    {
+        if ($request->method !== 'HEAD') {
+            return $response;
+        }
+
+        return new PbbLanding_Response($response->status, $response->headers, '');
     }
 
     private function asset($name)
