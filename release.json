@@ -53,7 +53,9 @@
     }
   },
   "health": {
-    "status": "/.well-known/pbb-hub.json"
+    "status": "/up",
+    "http": "/up",
+    "ready": "/up"
   },
   "landing": {
     "launcher": {

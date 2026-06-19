@@ -206,6 +206,16 @@ assert_true(strpos($response->body, 'ui-navbar-brand-media') === false && strpos
 $response = $app->handle(request('HEAD', 'pbb.ph', '/'));
 assert_true($response->status === 200 && $response->body === '' && isset($response->headers['Content-Type']) && strpos($response->headers['Content-Type'], 'text/html') === 0, 'local launcher root supports HEAD with empty body');
 
+$response = $app->handle(request('GET', 'pbb.ph', '/up'));
+$payload = json_decode($response->body, true);
+assert_true($response->status === 200 && isset($payload['ok']) && $payload['ok'] === true && isset($payload['surface']) && $payload['surface'] === 'local', 'local readiness endpoint returns JSON health');
+
+$response = $app->handle(request('HEAD', 'pbb.ph', '/api/health'));
+assert_true($response->status === 200 && $response->body === '' && isset($response->headers['Content-Type']) && strpos($response->headers['Content-Type'], 'application/json') === 0, 'local health endpoint supports HEAD with empty body');
+
+$response = $app->handle(request('GET', 'unknown.example', '/up'));
+assert_true($response->status === 404, 'readiness endpoint fails on unknown hosts');
+
 $response = $app->handle(request('GET', 'pbb.ph', '/relay/api/v1/receive'));
 assert_true($response->status === 404, 'gateway fails on pbb.ph');
 

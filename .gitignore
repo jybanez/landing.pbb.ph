@@ -2,6 +2,8 @@ storage/logs/*.log
 !storage/logs/.gitkeep
 storage/installer/
 config/landing.local.php
+config/agent-chat.local.json
+pbb-chat-token.local.json
 dist/
 *.tmp
 *.bak

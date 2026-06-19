@@ -40,6 +40,15 @@ class PbbLanding_App
             return $this->asset('helper-ui-bundle.js');
         }
 
+        if ($this->isReadinessRead($request) && ($isLocalSurface || ($publicHost !== '' && $requestHost === $publicHost))) {
+            return $this->headAware($request, PbbLanding_Response::json(200, array(
+                'ok' => true,
+                'app' => isset($this->config['app']['id']) ? $this->config['app']['id'] : 'pbb-landing',
+                'version' => isset($this->config['app']['version']) ? $this->config['app']['version'] : null,
+                'surface' => $isLocalSurface ? 'local' : 'public',
+            )));
+        }
+
         if (strpos($request->path, '/internal/') === 0) {
             if ($requestHost !== $localHost) {
                 return PbbLanding_Response::json(404, array('error' => 'not_found'));
@@ -136,6 +145,12 @@ class PbbLanding_App
     private function isRootRead(PbbLanding_Request $request)
     {
         return $request->path === '/' && ($request->method === 'GET' || $request->method === 'HEAD');
+    }
+
+    private function isReadinessRead(PbbLanding_Request $request)
+    {
+        return ($request->path === '/up' || $request->path === '/api/health')
+            && ($request->method === 'GET' || $request->method === 'HEAD');
     }
 
     private function headAware(PbbLanding_Request $request, PbbLanding_Response $response)
