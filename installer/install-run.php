@@ -246,7 +246,7 @@ function write_local_config($installPath, array $config)
     $registry = (string) ($paths['registry'] ?? ($installPath . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'registry.json'));
     $auditLog = (string) ($paths['audit_log'] ?? ($installPath . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'landing-audit.log'));
     $gatewayLog = (string) ($paths['gateway_log'] ?? ($installPath . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'landing-gateway.log'));
-    $relayHubJson = (string) ($paths['relay_hub_json'] ?? 'C:/wamp64/www/pbb/relay/public/hub.json');
+    $relayHubJson = (string) ($paths['relay_hub_json'] ?? 'https://relay.pbb.ph/hub.json');
 
     $local = array(
         'hosts' => array(

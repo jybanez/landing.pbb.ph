@@ -13,7 +13,8 @@ class PbbLanding_App
     public function __construct(array $config)
     {
         $this->config = $config;
-        $this->hubSource = new PbbLanding_HubSource($config['paths']['relay_hub_json']);
+        $caBundle = isset($config['gateway']['ca_bundle']) ? (string) $config['gateway']['ca_bundle'] : '';
+        $this->hubSource = new PbbLanding_HubSource($config['paths']['relay_hub_json'], $caBundle);
         $this->projection = new PbbLanding_HubProjection();
         $this->registry = new PbbLanding_RegistryStore($config['paths']['registry'], $config['paths']['audit_log']);
         $this->auth = new PbbLanding_Auth($config['security']['registry_token_hash']);

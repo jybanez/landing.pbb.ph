@@ -20,7 +20,7 @@ $config = array(
         'registry' => $root . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'registry.json',
         'audit_log' => $root . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'landing-audit.log',
         'gateway_log' => $root . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'landing-gateway.log',
-        'relay_hub_json' => 'C:/wamp64/www/pbb/relay/public/hub.json',
+        'relay_hub_json' => getenv('PBB_LANDING_RELAY_HUB_JSON') ?: 'https://relay.pbb.ph/hub.json',
     ),
     'security' => array(
         // Set PBB_LANDING_REGISTRY_TOKEN_HASH to hash('sha256', <Kit-generated-token>).

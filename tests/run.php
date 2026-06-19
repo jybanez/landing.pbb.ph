@@ -111,6 +111,12 @@ $app = new PbbLanding_App($config);
 
 assert_true(PbbLanding_Host::normalize('CEBU-CEBU-RELAY.PBB.PH:443.') === 'cebu-cebu-relay.pbb.ph', 'host normalization strips case, port, trailing dot');
 
+list($fileHub, $fileHubState) = (new PbbLanding_HubSource($hubPath))->read();
+assert_true($fileHubState === 'ok' && isset($fileHub['domain']) && $fileHub['domain'] === 'cebu-cebu-relay.pbb.ph', 'hub source reads local hub.json files');
+
+list($urlHub, $urlHubState) = (new PbbLanding_HubSource('http://relay.pbb.ph/hub.json'))->read();
+assert_true($urlHub === null && $urlHubState === 'unavailable', 'hub source refuses non-HTTPS URLs');
+
 $response = $app->handle(request('GET', 'cebu-cebu-relay.pbb.ph', '/.well-known/pbb-hub.json'));
 $payload = json_decode($response->body, true);
 assert_true($response->status === 200, 'public projection is available on hub domain');
@@ -298,11 +304,12 @@ $installerConfig = array(
         'hq_host' => 'hub.pbb.ph',
         'registry_token_hash' => $tokenHash,
         'paths' => array(
-            'relay_hub_json' => 'C:/wamp64/www/pbb/relay/public/hub.json',
+            'relay_hub_json' => 'https://relay.pbb.ph/hub.json',
         ),
         'gateway' => array(
             'max_body_bytes' => 2048,
             'require_peer_domain' => true,
+            'ca_bundle' => 'C:/wamp64/certs/pbb.ph/pbb.ph.fullchain.crt',
             'timeout_seconds' => 12,
         ),
     ),
@@ -322,6 +329,7 @@ assert_true(is_file($installPath . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SE
 assert_true(is_file($installPath . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'installer' . DIRECTORY_SEPARATOR . 'install-manifest.json'), 'installer writes install manifest');
 $localConfigText = (string) file_get_contents($installPath . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'landing.local.php');
 assert_true(strpos($localConfigText, $tokenHash) !== false && strpos($localConfigText, 'installer-token') === false, 'installer writes token hash without plaintext token');
+assert_true(strpos($localConfigText, 'C:/wamp64/certs/pbb.ph/pbb.ph.fullchain.crt') !== false, 'installer writes configured CA bundle for HTTPS hub source');
 
 $installedRegistryPath = $installPath . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'registry.json';
 write_json($installedRegistryPath, array(

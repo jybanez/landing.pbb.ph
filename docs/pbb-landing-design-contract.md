@@ -11,11 +11,21 @@ Landing discovers hub identity from Relay and installed app metadata from its ow
 
 ## Source Context
 
-Active Relay hub snapshot:
+Active Relay hub snapshot source:
 
 ```text
-C:/wamp64/www/pbb/relay/public/hub.json
+https://relay.pbb.ph/hub.json
 ```
+
+Landing accepts `relay_hub_json` as either an HTTPS URL or a local absolute file
+path. Kit should prefer the HTTPS URL so Relay can run on another machine; local
+file paths are only a co-located install optimization.
+
+When `relay_hub_json` is HTTPS and the node uses the local PBB certificate chain,
+Kit must pass a PHP cURL CA bundle path through `landing.gateway.ca_bundle`
+(for WAMP nodes, typically `C:/wamp64/certs/pbb.ph/pbb.ph.fullchain.crt`).
+Without that CA bundle, PHP cURL can fail hub source reads even when the browser
+or PowerShell can reach the same URL.
 
 Current Relay `hub.json` top-level shape:
 

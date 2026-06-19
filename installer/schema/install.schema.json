@@ -47,7 +47,10 @@
             "registry": { "type": "string" },
             "audit_log": { "type": "string" },
             "gateway_log": { "type": "string" },
-            "relay_hub_json": { "type": "string" }
+            "relay_hub_json": {
+              "type": "string",
+              "description": "Relay hub.json source. Prefer https://relay.pbb.ph/hub.json so Relay may run on another machine; local absolute file paths are still supported for co-located installs."
+            }
           },
           "additionalProperties": false
         },
@@ -56,7 +59,10 @@
           "properties": {
             "max_body_bytes": { "type": "integer", "minimum": 1 },
             "require_peer_domain": { "type": "boolean" },
-            "ca_bundle": { "type": "string" },
+            "ca_bundle": {
+              "type": "string",
+              "description": "Optional CA bundle path for PHP cURL. Required when relay_hub_json is an HTTPS source using the local PBB certificate chain, for example C:/wamp64/certs/pbb.ph/pbb.ph.fullchain.crt."
+            },
             "timeout_seconds": { "type": "integer", "minimum": 1 }
           },
           "additionalProperties": false
