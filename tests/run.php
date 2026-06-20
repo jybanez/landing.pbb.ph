@@ -163,13 +163,23 @@ $relayRecord = array(
         'allowed_path_prefixes' => array('/api/v1/'),
         'm2m_only' => true,
     ),
+    'source' => array(
+        'release_json' => 'C:/wamp64/www/pbb/relay/release.json',
+    ),
 );
 
 $response = $app->handle(request('PUT', 'pbb.ph', '/internal/registry/apps/pbb-relay', array(
     'Authorization' => 'Bearer ' . $token,
     'Content-Type' => 'application/json',
 ), json_encode($relayRecord)));
+$putPayload = json_decode($response->body, true);
 assert_true($response->status === 200, 'valid registry PUT succeeds');
+assert_true(
+    !isset($putPayload['app']['install_path'])
+    && !isset($putPayload['app']['public_path'])
+    && !isset($putPayload['app']['source']['release_json']),
+    'registry PUT accepts and drops Kit-local path metadata'
+);
 
 $invalidLogoRecord = $relayRecord;
 $invalidLogoRecord['id'] = 'pbb-invalid-logo';
@@ -182,7 +192,12 @@ assert_true($response->status === 422, 'registry rejects non-HTTPS launcher logo
 
 $response = $app->handle(request('GET', 'pbb.ph', '/internal/registry/apps', array('Authorization' => 'Bearer ' . $token)));
 $payload = json_decode($response->body, true);
-assert_true(isset($payload['apps']['pbb-relay']['install_path']), 'registry GET returns full private registry behind token');
+assert_true(
+    !isset($payload['apps']['pbb-relay']['install_path'])
+    && !isset($payload['apps']['pbb-relay']['public_path'])
+    && !isset($payload['apps']['pbb-relay']['source']['release_json']),
+    'registry GET omits Kit-local path metadata after normalization'
+);
 
 $hotlineRecord = $relayRecord;
 $hotlineRecord['id'] = 'pbb-hotline';

@@ -179,8 +179,6 @@ Draft shape:
       "version": "1.1.0",
       "enabled": true,
       "install_scope": "local",
-      "install_path": "C:/wamp64/www/pbb/relay",
-      "public_path": "C:/wamp64/www/pbb/relay/public",
       "local_url": "https://relay.pbb.ph",
       "launch_url": "https://relay.pbb.ph",
       "health_url": "https://relay.pbb.ph/api/status",
@@ -318,8 +316,6 @@ Successful `PUT` response:
     "version": "5.6.1",
     "enabled": true,
     "install_scope": "local",
-    "install_path": "C:/wamp64/www/pbb/hotline",
-    "public_path": "C:/wamp64/www/pbb/hotline/public",
     "local_url": "https://hotline.pbb.ph",
     "launch_url": "https://hotline.pbb.ph/command",
     "health_url": "https://hotline.pbb.ph/up",
@@ -370,8 +366,6 @@ Strongly recommended app fields:
 - `version`.
 - `display_name`: short launcher label. If omitted, Landing falls back to `name`.
 - `install_scope`: `local`, `remote`, or `disabled`; defaults to `local`.
-- `install_path`.
-- `public_path`.
 - `local_url`: absolute HTTPS local LAN app URL.
 - `launch_url`: absolute HTTPS primary launcher URL.
 - `health_url`: absolute HTTPS advisory liveness URL.
@@ -383,7 +377,17 @@ Strongly recommended app fields:
 - `launcher.logo_kind`: `mark` or `logo`.
 - `launcher.icon`: fallback Helper icon key only.
 - `surfaces`: optional object of named HTTPS URLs for secondary app surfaces.
-- `source.release_json`: optional local release metadata source path for diagnostics.
+
+Transition-tolerated Kit-local fields:
+
+- `install_path`.
+- `public_path`.
+- `source.release_json`.
+
+Landing accepts these fields from older/current Kit payloads but drops them during
+registry normalization. They are Kit-local diagnostics and reconstruction
+metadata, not Landing runtime inputs. Kit keeps them in install-state and run
+reports instead of the Landing-facing runtime registry.
 
 Gateway fields:
 

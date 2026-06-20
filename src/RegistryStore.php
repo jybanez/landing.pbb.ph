@@ -136,6 +136,14 @@ class PbbLanding_RegistryStore
 
     private function normalizeApp(array $record)
     {
+        unset($record['install_path'], $record['public_path']);
+        if (isset($record['source']) && is_array($record['source'])) {
+            unset($record['source']['release_json']);
+            if (count($record['source']) === 0) {
+                unset($record['source']);
+            }
+        }
+
         if (!isset($record['install_scope'])) {
             $record['install_scope'] = 'local';
         }

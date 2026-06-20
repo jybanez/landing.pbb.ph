@@ -10,8 +10,6 @@
       "version": "1.1.0",
       "enabled": true,
       "install_scope": "local",
-      "install_path": "C:/wamp64/www/pbb/relay",
-      "public_path": "C:/wamp64/www/pbb/relay/public",
       "local_url": "https://relay.pbb.ph",
       "launch_url": "https://relay.pbb.ph",
       "health_url": "https://relay.pbb.ph/api/status",
@@ -34,9 +32,6 @@
           "/api/v1/"
         ],
         "m2m_only": true
-      },
-      "source": {
-        "release_json": "C:/wamp64/www/pbb/relay/release.json"
       }
     },
     "pbb-hotline": {
@@ -46,8 +41,6 @@
       "version": "5.6.1",
       "enabled": true,
       "install_scope": "local",
-      "install_path": "C:/wamp64/www/pbb/hotline",
-      "public_path": "C:/wamp64/www/pbb/hotline/public",
       "local_url": "https://hotline.pbb.ph",
       "launch_url": "https://hotline.pbb.ph",
       "health_url": "https://hotline.pbb.ph/up",
@@ -74,9 +67,6 @@
       "public_gateway": {
         "enabled": false,
         "reason": "Phase 1 public gateway scope is Relay only."
-      },
-      "source": {
-        "release_json": "C:/wamp64/www/pbb/hotline/release.json"
       }
     },
     "pbb-support": {
@@ -86,8 +76,6 @@
       "version": "0.1.0",
       "enabled": true,
       "install_scope": "local",
-      "install_path": "C:/wamp64/www/pbb/support",
-      "public_path": "C:/wamp64/www/pbb/support/public",
       "local_url": "https://support.pbb.ph",
       "launch_url": "https://support.pbb.ph",
       "health_url": "https://support.pbb.ph/up",
@@ -105,9 +93,6 @@
       "public_gateway": {
         "enabled": false,
         "reason": "Phase 1 public gateway scope is Relay only."
-      },
-      "source": {
-        "release_json": "C:/wamp64/www/pbb/support/release.json"
       }
     }
   }
